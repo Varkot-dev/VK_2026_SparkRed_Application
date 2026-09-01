@@ -49,7 +49,7 @@ export function WatchlistCard({ item, index, onUpdate, onRemove, isRemoving }: W
           <Button
             variant="danger"
             size="sm"
-            className="-mr-2 -mt-1 h-8 w-8 shrink-0 px-0"
+            className="-mt-1 h-8 w-8 shrink-0 rounded-full border border-line bg-surface-2 px-0 text-ink-faint hover:border-danger/50"
             aria-label={`Remove ${item.title} from your watchlist`}
             onClick={onRemove}
             disabled={isPending}
@@ -57,7 +57,7 @@ export function WatchlistCard({ item, index, onUpdate, onRemove, isRemoving }: W
           >
             {!isRemoving && (
               <svg viewBox="0 0 20 20" fill="none" className="size-4" aria-hidden="true">
-                <path d="M5 5l10 10M15 5 5 15" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+                <path d="M6 6l8 8M14 6 6 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </svg>
             )}
           </Button>
