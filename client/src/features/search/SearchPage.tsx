@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router';
 import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { PosterCardSkeleton } from '../../components/ui/Skeleton';
-import { useToast } from '../../components/ui/Toast';
+import { useToast } from '../../components/ui/toast-context';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { errorMessage } from '../../lib/api';
 import { cn } from '../../lib/cn';

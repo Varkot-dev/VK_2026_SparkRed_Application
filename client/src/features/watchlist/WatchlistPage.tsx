@@ -5,7 +5,7 @@ import { Link, useSearchParams } from 'react-router';
 import { Button } from '../../components/ui/Button';
 import { EmptyState } from '../../components/ui/EmptyState';
 import { PosterCardSkeleton } from '../../components/ui/Skeleton';
-import { useToast } from '../../components/ui/Toast';
+import { useToast } from '../../components/ui/toast-context';
 import { errorMessage } from '../../lib/api';
 import { WatchlistCard } from './WatchlistCard';
 import { WatchlistToolbar, type StatusFilter } from './WatchlistToolbar';

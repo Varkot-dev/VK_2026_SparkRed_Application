@@ -1,12 +1,9 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
 import { cn } from '../../lib/cn';
+import { ToastContext, type ToastTone } from './toast-context';
 
-type Tone = 'info' | 'success' | 'error';
-type Toast = { id: number; message: string; tone: Tone };
-type ToastContextValue = { push: (message: string, tone?: Tone) => void };
-
-const ToastContext = createContext<ToastContextValue | null>(null);
+type Toast = { id: number; message: string; tone: ToastTone };
 const TOAST_TTL_MS = 3_800;
 const MAX_VISIBLE = 3;
 
@@ -14,7 +11,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const nextId = useRef(1);
 
-  const push = useCallback((message: string, tone: Tone = 'info') => {
+  const push = useCallback((message: string, tone: ToastTone = 'info') => {
     const id = nextId.current++;
     setToasts((prev) => [...prev.slice(-(MAX_VISIBLE - 1)), { id, message, tone }]);
     setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), TOAST_TTL_MS);
@@ -30,13 +27,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useToast(): ToastContextValue {
-  const ctx = useContext(ToastContext);
-  if (!ctx) throw new Error('useToast must be used inside <ToastProvider>');
-  return ctx;
-}
 
-const TONE: Record<Tone, string> = {
+const TONE: Record<ToastTone, string> = {
   info: 'border-line-strong',
   success: 'border-success/60',
   error: 'border-danger/60',
