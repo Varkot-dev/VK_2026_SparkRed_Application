@@ -17,3 +17,6 @@ dist/
 
 # assessment brief, not part of the app
 *.pdf
+
+# local tooling
+.claude/
