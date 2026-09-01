@@ -13,7 +13,7 @@
     "dev": "concurrently -n server,client -c blue,magenta \"npm -w server run dev\" \"npm -w client run dev\"",
     "build": "npm run typecheck && npm -w server run build && npm -w client run build",
     "typecheck": "tsc -p shared --noEmit && tsc -p server --noEmit && tsc -b client",
-    "test": "npm -w server run test",
+    "test": "npm -w server run test && npm -w client run test",
     "db:push": "npm -w server run db:push"
   },
   "engines": {

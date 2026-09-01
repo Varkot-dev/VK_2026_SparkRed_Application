@@ -61,14 +61,16 @@ export function WatchlistCard({ item, index, onUpdate, onRemove, isRemoving }: W
           </Button>
         </div>
 
-        <SegmentedControl<WatchStatus>
-          label={`Status for ${item.title}`}
-          size="sm"
-          value={item.status}
-          options={STATUS_OPTIONS}
-          onChange={(status) => status !== item.status && onUpdate({ status })}
-          className="hidden w-full sm:inline-flex [&>button]:flex-1"
-        />
+        <div className="hidden sm:block">
+          <SegmentedControl<WatchStatus>
+            label={`Status for ${item.title}`}
+            size="sm"
+            value={item.status}
+            options={STATUS_OPTIONS}
+            onChange={(status) => status !== item.status && onUpdate({ status })}
+            className="w-full [&>button]:flex-1"
+          />
+        </div>
         {/* Two-column phone cards are too narrow for three segments; a native select is the better touch control. */}
         <select
           aria-label={`Status for ${item.title}`}
