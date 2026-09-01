@@ -10,6 +10,13 @@ export const WATCH_STATUS_LABEL: Record<WatchStatus, string> = {
   watched: 'Watched',
 };
 
+/** Short forms for tight layouts (cards, phone-width toolbars). */
+export const WATCH_STATUS_SHORT_LABEL: Record<WatchStatus, string> = {
+  want: 'Want',
+  watching: 'Watching',
+  watched: 'Watched',
+};
+
 export const RATING_MIN = 1;
 export const RATING_MAX = 10;
 export const ratingSchema = z.number().int().min(RATING_MIN).max(RATING_MAX);

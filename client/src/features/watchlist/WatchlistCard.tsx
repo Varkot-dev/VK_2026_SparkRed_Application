@@ -1,4 +1,4 @@
-import { WATCH_STATUSES, type UpdateItemInput, type WatchlistItem, type WatchStatus } from '@marquee/shared';
+import { WATCH_STATUSES, WATCH_STATUS_LABEL, WATCH_STATUS_SHORT_LABEL, type UpdateItemInput, type WatchlistItem, type WatchStatus } from '@marquee/shared';
 import { motion, useReducedMotion } from 'motion/react';
 import { Button } from '../../components/ui/Button';
 import { PosterImage } from '../../components/ui/PosterImage';
@@ -13,9 +13,7 @@ type WatchlistCardProps = {
   isRemoving: boolean;
 };
 
-/** Short labels: the card is narrow, the toolbar already spells them out. */
-const SHORT_LABEL: Record<WatchStatus, string> = { want: 'Want', watching: 'Watching', watched: 'Watched' };
-const STATUS_OPTIONS = WATCH_STATUSES.map((s) => ({ value: s, label: SHORT_LABEL[s] }));
+const STATUS_OPTIONS = WATCH_STATUSES.map((s) => ({ value: s, label: WATCH_STATUS_SHORT_LABEL[s] }));
 
 export function WatchlistCard({ item, index, onUpdate, onRemove, isRemoving }: WatchlistCardProps) {
   const reduceMotion = useReducedMotion();
@@ -69,8 +67,22 @@ export function WatchlistCard({ item, index, onUpdate, onRemove, isRemoving }: W
           value={item.status}
           options={STATUS_OPTIONS}
           onChange={(status) => status !== item.status && onUpdate({ status })}
-          className="w-full [&>button]:flex-1"
+          className="hidden w-full sm:inline-flex [&>button]:flex-1"
         />
+        {/* Two-column phone cards are too narrow for three segments; a native select is the better touch control. */}
+        <select
+          aria-label={`Status for ${item.title}`}
+          value={item.status}
+          disabled={isPending}
+          onChange={(e) => onUpdate({ status: e.target.value as WatchStatus })}
+          className="h-11 w-full rounded-lg border border-line bg-surface-1 px-3 text-sm text-ink focus:border-accent focus:outline-none disabled:opacity-50 sm:hidden"
+        >
+          {WATCH_STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {WATCH_STATUS_LABEL[s]}
+            </option>
+          ))}
+        </select>
 
         {item.status === 'watched' && (
           <motion.div

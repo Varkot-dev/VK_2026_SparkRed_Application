@@ -1,7 +1,9 @@
 import { Link } from 'react-router';
 import { cn } from '../../lib/cn';
 
-export function Brand({ className, size = 'md' }: { className?: string; size?: 'md' | 'lg' }) {
+type BrandProps = { className?: string; size?: 'md' | 'lg'; hideWordmarkOnMobile?: boolean };
+
+export function Brand({ className, size = 'md', hideWordmarkOnMobile = false }: BrandProps) {
   return (
     <Link to="/" className={cn('group inline-flex items-center gap-2.5', className)} aria-label="Marquee home">
       <span
@@ -14,7 +16,9 @@ export function Brand({ className, size = 'md' }: { className?: string; size?: '
       >
         M
       </span>
-      <span className={cn('font-display tracking-tight text-ink', size === 'lg' ? 'text-3xl' : 'text-xl')}>Marquee</span>
+      <span className={cn('font-display tracking-tight text-ink', size === 'lg' ? 'text-3xl' : 'text-xl', hideWordmarkOnMobile && 'hidden sm:inline')}>
+        Marquee
+      </span>
     </Link>
   );
 }

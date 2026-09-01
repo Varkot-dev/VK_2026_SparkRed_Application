@@ -2,7 +2,7 @@ import {
   SORT_FIELDS,
   SORT_FIELD_LABEL,
   WATCH_STATUSES,
-  WATCH_STATUS_LABEL,
+  WATCH_STATUS_SHORT_LABEL,
   type ListQuery,
   type SortField,
   type WatchStatus,
@@ -24,12 +24,12 @@ const SORT_OPTIONS = SORT_FIELDS.map((value) => ({ value, label: SORT_FIELD_LABE
 export function WatchlistToolbar({ query, counts, onChange }: WatchlistToolbarProps) {
   const statusOptions = [
     { value: 'all' as const, label: 'All', badge: counts?.all },
-    ...WATCH_STATUSES.map((s) => ({ value: s, label: WATCH_STATUS_LABEL[s], badge: counts?.[s] })),
+    ...WATCH_STATUSES.map((s) => ({ value: s, label: WATCH_STATUS_SHORT_LABEL[s], badge: counts?.[s] })),
   ];
 
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="overflow-x-auto pb-1 -mb-1 sm:overflow-visible">
+      <div className="overflow-x-auto [scrollbar-width:none] sm:overflow-visible">
         <SegmentedControl<StatusFilter>
           label="Filter by status"
           value={query.status ?? 'all'}
