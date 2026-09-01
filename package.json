@@ -1,0 +1,26 @@
+{
+  "name": "marquee",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Marquee — a personal movie watchlist. React + Express + Postgres.",
+  "type": "module",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,magenta \"npm -w server run dev\" \"npm -w client run dev\"",
+    "build": "npm run typecheck && npm -w client run build",
+    "typecheck": "tsc -p shared --noEmit && tsc -p server --noEmit && tsc -p client --noEmit",
+    "test": "npm -w server run test",
+    "db:push": "npm -w server run db:push"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "typescript": "~6.0.2"
+  }
+}

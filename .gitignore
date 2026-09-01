@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+.vercel/
+
+# env — never commit secrets
+.env
+.env.*
+!.env.example
+
+# logs / os
+*.log
+.DS_Store
+.vercel
+
+# assessment brief, not part of the app
+*.pdf
