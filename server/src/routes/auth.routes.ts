@@ -1,6 +1,5 @@
 import { loginInput, registerInput, type LoginInput, type PublicUser, type RegisterInput } from '@marquee/shared';
 import { Router, type Request } from 'express';
-import { requireAuth } from '../middleware/require-auth';
 import { SESSION_COOKIE } from '../middleware/session';
 import { validate, validated } from '../middleware/validate';
 import type { AuthService } from '../services/auth.service';
@@ -43,13 +42,17 @@ export function createAuthRouter(auth: AuthService) {
     res.status(204).end();
   });
 
-  router.get('/me', requireAuth, async (req, res) => {
-    const user = await auth.getById(req.session.userId as number);
+  /** Signed-out is a normal answer here, not an error: 200 with `data: null`. */
+  router.get('/me', async (req, res) => {
+    const userId = req.session.userId;
+    if (!userId) return res.json({ data: null });
+
+    const user = await auth.getById(userId);
     if (!user) {
       // Account vanished underneath a live session (e.g. DB reset): drop the session.
       await destroySession(req);
       res.clearCookie(SESSION_COOKIE);
-      return res.status(401).json({ error: { code: 'UNAUTHORIZED', message: 'Session is no longer valid' } });
+      return res.json({ data: null });
     }
     res.json({ data: user });
   });
