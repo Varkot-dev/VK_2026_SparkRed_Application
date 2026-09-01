@@ -40,6 +40,7 @@ export function createApp(config: Config = loadConfig()) {
   app.use(express.json({ limit: JSON_BODY_LIMIT }));
   app.use(createSessionMiddleware(config, pool));
 
+  // In-memory store: on serverless this is per warm instance, which is adequate for this scale.
   const authLimiter = rateLimit({
     windowMs: AUTH_RATE_WINDOW_MS,
     limit: AUTH_RATE_LIMIT,

@@ -51,17 +51,21 @@ export class WatchlistRepository {
     return row;
   }
 
-  async update(id: number, patch: ItemPatch): Promise<WatchlistItemRow | null> {
+  /** Scoped by userId in SQL too, so a caller that forgets to check ownership still can't cross users. */
+  async update(id: number, userId: number, patch: ItemPatch): Promise<WatchlistItemRow | null> {
     const [row] = await this.db
       .update(watchlistItems)
       .set({ ...patch, updatedAt: new Date() })
-      .where(eq(watchlistItems.id, id))
+      .where(and(eq(watchlistItems.id, id), eq(watchlistItems.userId, userId)))
       .returning();
     return row ?? null;
   }
 
-  async delete(id: number): Promise<boolean> {
-    const rows = await this.db.delete(watchlistItems).where(eq(watchlistItems.id, id)).returning({ id: watchlistItems.id });
+  async delete(id: number, userId: number): Promise<boolean> {
+    const rows = await this.db
+      .delete(watchlistItems)
+      .where(and(eq(watchlistItems.id, id), eq(watchlistItems.userId, userId)))
+      .returning({ id: watchlistItems.id });
     return rows.length > 0;
   }
 }

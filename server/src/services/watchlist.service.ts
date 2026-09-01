@@ -47,7 +47,7 @@ export class WatchlistService {
     const requestedRating = input.rating !== undefined ? input.rating : current.rating;
     const nextRating = nextStatus === 'watched' ? requestedRating : null;
 
-    const row = await this.items.update(id, { status: nextStatus, rating: nextRating });
+    const row = await this.items.update(id, userId, { status: nextStatus, rating: nextRating });
     if (!row) throw new NotFoundError(ITEM_NOT_FOUND);
     return toWatchlistItem(row);
   }
@@ -55,7 +55,7 @@ export class WatchlistService {
   async remove(userId: number, id: number): Promise<void> {
     const current = await this.items.findForUser(id, userId);
     if (!current) throw new NotFoundError(ITEM_NOT_FOUND);
-    await this.items.delete(id);
+    await this.items.delete(id, userId);
   }
 }
 

@@ -28,7 +28,7 @@ function makeRepo(overrides: Partial<WatchlistRepository> = {}) {
     findForUser: vi.fn().mockResolvedValue(null),
     findByMovie: vi.fn().mockResolvedValue(null),
     insert: vi.fn().mockImplementation(async (input) => makeRow(input)),
-    update: vi.fn().mockImplementation(async (id, patch) => makeRow({ id, ...patch })),
+    update: vi.fn().mockImplementation(async (id, _userId, patch) => makeRow({ id, ...patch })),
     delete: vi.fn().mockResolvedValue(true),
     ...overrides,
   } as unknown as WatchlistRepository;
@@ -72,7 +72,7 @@ describe('WatchlistService.update', () => {
 
     const item = await new WatchlistService(repo).update(USER, 1, { status: 'watched', rating: 9 });
 
-    expect(repo.update).toHaveBeenCalledWith(1, { status: 'watched', rating: 9 });
+    expect(repo.update).toHaveBeenCalledWith(1, USER, { status: 'watched', rating: 9 });
     expect(item).toMatchObject({ status: 'watched', rating: 9 });
   });
 
@@ -81,7 +81,7 @@ describe('WatchlistService.update', () => {
 
     await new WatchlistService(repo).update(USER, 1, { status: 'watching' });
 
-    expect(repo.update).toHaveBeenCalledWith(1, { status: 'watching', rating: null });
+    expect(repo.update).toHaveBeenCalledWith(1, USER, { status: 'watching', rating: null });
   });
 
   it('keeps the existing rating when only status=watched is re-sent', async () => {
@@ -89,7 +89,7 @@ describe('WatchlistService.update', () => {
 
     await new WatchlistService(repo).update(USER, 1, { status: 'watched' });
 
-    expect(repo.update).toHaveBeenCalledWith(1, { status: 'watched', rating: 7 });
+    expect(repo.update).toHaveBeenCalledWith(1, USER, { status: 'watched', rating: 7 });
   });
 
   it('allows explicitly clearing a rating with null', async () => {
@@ -97,7 +97,7 @@ describe('WatchlistService.update', () => {
 
     await new WatchlistService(repo).update(USER, 1, { rating: null });
 
-    expect(repo.update).toHaveBeenCalledWith(1, { status: 'watched', rating: null });
+    expect(repo.update).toHaveBeenCalledWith(1, USER, { status: 'watched', rating: null });
   });
 });
 
@@ -105,7 +105,7 @@ describe('WatchlistService.remove', () => {
   it('deletes an owned item', async () => {
     const repo = makeRepo({ findForUser: vi.fn().mockResolvedValue(makeRow()) });
     await new WatchlistService(repo).remove(USER, 1);
-    expect(repo.delete).toHaveBeenCalledWith(1);
+    expect(repo.delete).toHaveBeenCalledWith(1, USER);
   });
 
   it('throws NotFoundError for an item the user does not own', async () => {

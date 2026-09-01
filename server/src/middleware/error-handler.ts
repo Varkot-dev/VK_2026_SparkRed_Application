@@ -16,8 +16,8 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
     return res.status(err.status).json(body);
   }
 
-  // Malformed JSON from express.json() arrives as a SyntaxError with a status.
-  if (err instanceof SyntaxError && 'status' in err && err.status === 400) {
+  // express.json() tags unparseable bodies with body-parser's error type.
+  if (err instanceof SyntaxError && 'type' in err && err.type === 'entity.parse.failed') {
     const body: ApiError = { error: { code: 'VALIDATION_ERROR', message: 'Request body is not valid JSON' } };
     return res.status(400).json(body);
   }
