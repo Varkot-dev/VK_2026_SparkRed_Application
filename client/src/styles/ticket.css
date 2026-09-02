@@ -1,0 +1,748 @@
+/* =========================================================================
+   SIGNATURE — the ticket stub
+   ========================================================================= */
+.stubs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-5) var(--s-4);
+  padding-top: var(--s-5);
+  align-items: stretch;
+  list-style: none;
+  margin: 0;
+  padding-inline: 0;
+}
+@media (min-width: 600px) {
+  .stubs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 960px) {
+  .stubs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.stub {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--stub-w) minmax(0, 1fr);
+  background: var(--card);
+  border-radius: var(--radius);
+  filter: drop-shadow(0 1px 0 rgb(23 22 26 / 0.16)) drop-shadow(0 6px 14px rgb(18 49 92 / 0.1));
+  transition:
+    transform var(--dur) var(--ease),
+    filter var(--dur) var(--ease);
+}
+.stub:hover,
+.stub:focus-within {
+  transform: translateY(-2px);
+}
+/* the score line's notches: half-circles bitten out of the top and bottom edge */
+.stub__notch {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.stub__notch::before,
+.stub__notch::after {
+  content: '';
+  position: absolute;
+  z-index: 6;
+  width: var(--punch);
+  height: var(--punch);
+  border-radius: 50%;
+  background: var(--stock);
+  box-shadow:
+    inset -1px 0 0 rgb(23 22 26 / 0.2),
+    inset 1px 0 0 rgb(23 22 26 / 0.1);
+  left: calc(var(--stub-w) - var(--punch) / 2);
+}
+.stub__notch::before {
+  top: calc(-1 * var(--punch) / 2);
+}
+.stub__notch::after {
+  bottom: calc(-1 * var(--punch) / 2);
+}
+
+/* torn stub column: rotated thermal data + score line */
+.stub__tear {
+  position: relative;
+  background: var(--stub-tint);
+  border-right: 1px dashed rgb(23 22 26 / 0.34);
+  border-radius: var(--radius) 0 0 var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--s-3);
+  overflow: hidden;
+}
+.stub__serial {
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+.stub__serial b {
+  color: var(--ticket-red);
+  font-weight: 600;
+}
+
+.stub__body {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
+  position: relative;
+}
+
+/* poster + stamp */
+.poster {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: var(--ticket-blue-deep);
+  border-bottom: 1px solid var(--rule);
+}
+.poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.93) contrast(1.02);
+}
+.poster::after {
+  /* ink-on-paper flattening so posters sit in the stock instead of shouting */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(18 49 92 / 0.1), rgb(18 49 92 / 0.02) 45%, rgb(23 22 26 / 0.3));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.poster--blank {
+  display: grid;
+  place-content: end start;
+  padding: var(--s-3);
+  background: var(--ticket-blue-deep);
+}
+.poster--blank span {
+  font-family: var(--face-display);
+  font-size: 1rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--board-text);
+  letter-spacing: var(--track-display);
+}
+.poster__year {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  background: var(--card);
+  color: var(--ink);
+  padding: 0.2rem 0.42rem;
+  border-radius: 0 var(--radius) 0 0;
+}
+
+/* ---- the rubber stamp ---- */
+.stamp {
+  position: absolute;
+  z-index: 3;
+  right: 9%;
+  top: 8%;
+  max-width: 78%;
+  font-family: var(--face-display);
+  font-size: clamp(0.62rem, 0.5rem + 0.42vw, 0.82rem);
+  letter-spacing: var(--track-stamp);
+  text-transform: uppercase;
+  padding: 0.32rem 0.5rem 0.28rem;
+  border: 2.5px solid currentColor;
+  border-radius: 2px;
+  line-height: 1;
+  opacity: 0.86;
+  /* worn rubber: the ink never covers evenly */
+  mask-image:
+    radial-gradient(circle at 22% 38%, transparent 0 1.1px, #000 1.4px),
+    radial-gradient(circle at 71% 22%, transparent 0 0.9px, #000 1.2px),
+    radial-gradient(circle at 46% 78%, transparent 0 1.3px, #000 1.6px),
+    linear-gradient(#000, #000);
+  mask-composite: intersect;
+  -webkit-mask-image:
+    radial-gradient(circle at 22% 38%, transparent 0 1.1px, #000 1.4px),
+    radial-gradient(circle at 71% 22%, transparent 0 0.9px, #000 1.2px),
+    radial-gradient(circle at 46% 78%, transparent 0 1.3px, #000 1.6px),
+    linear-gradient(#000, #000);
+  -webkit-mask-composite: source-in;
+}
+.stamp--watched {
+  color: var(--ticket-red);
+  --rot: -11deg;
+}
+.stamp--watching {
+  color: var(--ticket-blue);
+  --rot: 6deg;
+}
+.stamp--want {
+  color: var(--ink-soft);
+  --rot: -6deg;
+  opacity: 0.72;
+}
+
+/* stub text block */
+.stub__print {
+  padding: var(--s-3) var(--s-3) var(--s-4);
+  display: grid;
+  gap: var(--s-3);
+  grid-template-rows: auto auto 1fr auto;
+  align-content: stretch;
+}
+.stub__title {
+  font-family: var(--face-display);
+  font-size: var(--t-title);
+  line-height: 1.08;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+.stub__meta {
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--thermal);
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0;
+}
+.stub__meta i {
+  font-style: normal;
+  color: var(--rule);
+}
+.stub__controls {
+  display: grid;
+  gap: var(--s-3);
+  align-self: end;
+}
+.stub__void {
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--thermal);
+  justify-self: start;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition:
+    color var(--dur) var(--ease),
+    text-decoration-color var(--dur) var(--ease);
+}
+.stub__void:hover {
+  color: var(--ticket-red);
+  text-decoration-color: currentColor;
+}
+
+/* ---- 3-state status: a punch strip, not a pill group ---- */
+.punchstrip {
+  display: flex;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.punch {
+  flex: 1 1 0;
+  min-width: 0;
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.12rem;
+  min-height: 2.25rem;
+  color: var(--ink-faint);
+  background: var(--card);
+  border-right: 1px dashed var(--rule);
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.punch:last-child {
+  border-right: none;
+}
+.punch:hover {
+  background: var(--stub-tint);
+  color: var(--ink);
+}
+.punch[aria-pressed='true'] {
+  background: var(--ticket-blue);
+  color: var(--card);
+}
+.punch[aria-pressed='true'].is-watched {
+  background: var(--ticket-red);
+}
+.punch:focus-visible {
+  outline-offset: -3px;
+}
+
+/* ---- rating: punched holes 1..10 ---- */
+.rating {
+  display: grid;
+  gap: 0.4rem;
+}
+.rating__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--thermal);
+  margin: 0;
+}
+.rating__score {
+  font-family: var(--face-display);
+  font-size: 0.92rem;
+  letter-spacing: 0;
+  color: var(--ticket-red);
+}
+.rating__score--none {
+  color: var(--thermal);
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+}
+.holes {
+  display: flex;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--card);
+  overflow: hidden;
+}
+.hole {
+  flex: 1;
+  height: 22px;
+  min-width: 0;
+  border-right: 1px dashed var(--rule);
+  position: relative;
+  transition: background var(--dur) var(--ease);
+}
+.hole:last-child {
+  border-right: none;
+}
+/* the hole itself — a dark dot when unpunched, cleared to card colour when punched */
+.hole::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #ccd0c9;
+  transition:
+    background var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.hole:hover {
+  background: var(--stub-tint);
+}
+.hole.is-punched {
+  background: var(--ticket-red);
+}
+.hole.is-punched::after {
+  background: var(--card);
+  box-shadow: 0 0 0 1px rgb(120 8 26 / 0.55);
+}
+.hole:focus-visible {
+  outline-offset: -3px;
+}
+.hole:disabled {
+  cursor: default;
+}
+
+/* ---- void: the remove confirmation ---- */
+.stub--voiding .poster img {
+  filter: saturate(0.15) contrast(0.95) brightness(1.06);
+}
+.void {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-content: center;
+  gap: var(--s-3);
+  background: rgb(248 248 245 / 0.92);
+  border: 2px solid var(--ticket-red);
+  border-radius: var(--radius);
+  padding: var(--s-4);
+  text-align: center;
+}
+.void__stamp {
+  font-family: var(--face-display);
+  font-size: clamp(1rem, 0.7rem + 1.1vw, 1.5rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ticket-red);
+  border: 3px solid var(--ticket-red);
+  border-radius: 2px;
+  padding: 0.3rem 0.6rem;
+  transform: rotate(-8deg);
+  opacity: 0.9;
+  justify-self: center;
+}
+.void__q {
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.void__row {
+  display: flex;
+  gap: var(--s-2);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ---- skeleton stub while the roll prints ---- */
+.stub--skeleton {
+  filter: none;
+  opacity: 0.7;
+}
+.stub--skeleton .poster {
+  background: var(--stub-tint);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+.stub--skeleton .bar {
+  height: 0.8rem;
+  background: var(--stub-tint);
+  border-radius: 2px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* ============ SEARCH — the box-office counter ============ */
+.searchbar {
+  display: flex;
+  align-items: stretch;
+  max-width: 38rem;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--card);
+  overflow: hidden;
+}
+.searchbar__pre {
+  display: grid;
+  place-content: center;
+  padding-inline: 0.75rem;
+  background: var(--ink);
+  color: var(--card);
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.searchbar input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--face-mono);
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  padding: 0.8rem 0.85rem;
+  min-height: 3rem;
+}
+.searchbar input::placeholder {
+  color: var(--thermal);
+}
+.searchbar input:focus {
+  outline: none;
+}
+.searchbar:focus-within {
+  outline: 2.5px solid var(--ticket-red);
+  outline-offset: 2px;
+}
+.searchbar__state {
+  display: grid;
+  place-content: center;
+  padding-inline: 0.75rem;
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--thermal);
+  white-space: nowrap;
+}
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-4);
+  padding-top: var(--s-5);
+  list-style: none;
+  margin: 0;
+  padding-inline: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+.results--stale {
+  opacity: 0.55;
+}
+@media (min-width: 600px) {
+  .results {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 960px) {
+  .results {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.result {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  transition:
+    border-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+.result:hover,
+.result:focus-within {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+.result .poster {
+  border-bottom: 1px solid var(--rule);
+}
+.score {
+  position: absolute;
+  right: 0.4rem;
+  top: 0.4rem;
+  z-index: 2;
+  font-family: var(--face-mono);
+  font-weight: 600;
+  font-size: var(--t-micro);
+  letter-spacing: 0.06em;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  padding: 0.18rem 0.32rem;
+}
+.score b {
+  color: var(--ticket-red);
+  font-weight: 600;
+}
+.result__print {
+  padding: var(--s-3);
+  display: grid;
+  gap: var(--s-3);
+  align-content: space-between;
+}
+.result__blurb {
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--ink-faint);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+@media (max-width: 599px) {
+  .result__blurb {
+    display: none;
+  }
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+  padding-top: var(--s-6);
+}
+.pager__of {
+  font-family: var(--face-mono);
+  font-size: var(--t-data);
+  letter-spacing: var(--track-data);
+  text-transform: uppercase;
+  color: var(--thermal);
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============ SIGN IN — the box-office window ============ */
+.lobby {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--s-5) var(--gutter) var(--s-7);
+}
+.window {
+  width: 100%;
+  max-width: 26rem;
+  background: var(--card);
+  border-radius: var(--radius);
+  filter: drop-shadow(0 1px 0 rgb(23 22 26 / 0.18)) drop-shadow(0 10px 22px rgb(18 49 92 / 0.12));
+  overflow: hidden;
+  position: relative;
+}
+.window__head {
+  background: var(--ticket-blue-deep);
+  color: var(--card);
+  padding: var(--s-4) var(--s-5) var(--s-5);
+  position: relative;
+}
+.window__head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background:
+    radial-gradient(circle at 5px 2.5px, var(--bulb) 0 1.7px, transparent 1.9px) 0 0/14px 5px repeat-x,
+    var(--ticket-blue);
+}
+.window__k {
+  font-family: var(--face-mono);
+  font-size: var(--t-data);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--board-muted);
+  margin: 0;
+}
+.window__mark {
+  font-family: var(--face-display);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: var(--track-display);
+  line-height: 1;
+  margin-top: 0.4rem;
+  color: var(--card);
+}
+.window__mark span {
+  color: var(--ticket-red);
+}
+.window__h {
+  font-family: var(--face-mono);
+  font-size: var(--t-data);
+  letter-spacing: var(--track-data);
+  text-transform: uppercase;
+  color: var(--board-text);
+  margin: 0.6rem 0 0;
+}
+/* the drilled speak-through plate of a ticket booth */
+.grille {
+  height: 42px;
+  background: var(--stub-tint);
+  border-bottom: 1px solid var(--rule);
+  background-image: radial-gradient(circle at 5px 5px, rgb(23 22 26 / 0.52) 0 2.1px, rgb(23 22 26 / 0.1) 2.4px, transparent 2.9px);
+  background-size: 11px 11px;
+  background-position: center;
+  box-shadow: inset 0 3px 6px rgb(23 22 26 / 0.1);
+}
+.window__body {
+  padding: var(--s-5);
+  display: grid;
+  gap: var(--s-4);
+}
+.window__alert {
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ticket-red);
+  border: 1px solid var(--ticket-red);
+  background: var(--bad-bg);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.7rem;
+  margin: 0;
+}
+.window__foot {
+  border-top: 1px dashed rgb(23 22 26 / 0.3);
+  padding: var(--s-4) var(--s-5);
+  font-family: var(--face-mono);
+  font-size: var(--t-data);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+.window__foot a {
+  color: var(--ticket-blue);
+  text-underline-offset: 3px;
+}
+.window__foot a:hover {
+  color: var(--ticket-red);
+}
+.lobby__note {
+  margin-top: var(--s-5);
+  font-family: var(--face-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--thermal);
+  text-align: center;
+}
+
+/* ---- phone: two narrow columns can't hold three mono labels side by side ---- */
+@media (max-width: 599px) {
+  .stub__print {
+    padding: var(--s-2) var(--s-2) var(--s-3);
+    gap: var(--s-2);
+  }
+}
+
+/* ---- research-driven details ---- */
+/* punch cards group 5+5: a solid divider after the fifth hole reads at a glance */
+.hole:nth-child(5) {
+  border-right: 1px solid var(--rule);
+}
+/* ghost stamp on a search result that's already on the roll */
+.stamp--ghost {
+  color: var(--ticket-blue);
+  opacity: 0.55;
+  --rot: -9deg;
+  transform: rotate(var(--rot));
+}
+/* diagonal corner band: unwatched for 90+ days */
+.stub__band {
+  position: absolute;
+  z-index: 4;
+  top: 0.9rem;
+  left: -2.2rem;
+  transform: rotate(-45deg);
+  width: 8rem;
+  text-align: center;
+  font-family: var(--face-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--card);
+  padding: 0.18rem 0;
+  pointer-events: none;
+}

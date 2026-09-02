@@ -1,0 +1,77 @@
+/*
+ * Marquee — box office / ticket stub.
+ * Palette named from ticket stock, not from a UI theme:
+ *   ticket-blue  flat offset blue of a numbered roll ticket
+ *   ticket-red   rubber-stamp ink (WATCHED / VOID)
+ *   ink          thermal-printer black
+ *   stock        cool bone card stock — green-grey, deliberately not cream
+ *   card         the printed face of a stub
+ *   thermal      faded thermal-receipt grey
+ * Type: Archivo Black (display — what ADMIT ONE is set in) / IBM Plex Mono (stub data) / Work Sans (body).
+ * Signature: the perforated stub — real half-circle punches, a torn serial column, a rubber-stamp status.
+ */
+:root {
+  --ticket-blue: #1b4b8f;
+  --ticket-blue-deep: #12315c;
+  --ticket-red: #c8102e;
+  --ticket-red-deep: #a20d25;
+  --ink: #17161a;
+  --ink-soft: #4c4f4a;
+  --ink-faint: #5b605a;
+  --stock: #e4e6e0;
+  --card: #f8f8f5;
+  --thermal: #9da29b;
+  --rule: #c9ccc5;
+  --stub-tint: #dee2dc;
+  --bulb: #f0d28a;
+  --board-muted: #9db4d6;
+  --board-text: #c9d6e8;
+  --bad-bg: #fbeff1;
+
+  --face-display: 'Archivo Black', 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  --face-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --face-body: 'Work Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --t-marquee: clamp(2.4rem, 1.1rem + 5.4vw, 5rem);
+  --t-screen: clamp(1.05rem, 0.9rem + 0.7vw, 1.45rem);
+  --t-title: clamp(0.95rem, 0.88rem + 0.28vw, 1.1rem);
+  --t-body: clamp(0.9rem, 0.87rem + 0.14vw, 0.975rem);
+  --t-data: clamp(0.62rem, 0.58rem + 0.14vw, 0.7rem);
+  --t-micro: 0.585rem;
+
+  --track-display: -0.022em;
+  --track-data: 0.13em;
+  --track-stamp: 0.055em;
+
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --gutter: clamp(1rem, 0.5rem + 2.4vw, 2.5rem);
+  --measure: 76rem;
+
+  --punch: 11px; /* diameter of an edge perforation */
+  --stub-w: 2.15rem; /* torn stub column */
+  --radius: 3px;
+
+  --dur: 200ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@media (min-width: 960px) {
+  :root {
+    --stub-w: 2.6rem;
+    --punch: 13px;
+  }
+}
+
+@media (max-width: 599px) {
+  :root {
+    --stub-w: 1.65rem;
+    --punch: 9px;
+    --t-micro: 0.55rem;
+  }
+}

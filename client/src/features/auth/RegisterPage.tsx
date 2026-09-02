@@ -1,4 +1,5 @@
 import { Link, useNavigate, useSearchParams } from 'react-router';
+import { Window } from '../../components/layout/Window';
 import { errorMessage } from '../../lib/api';
 import { AuthForm } from './AuthForm';
 import { safeNextPath } from './loaders';
@@ -8,25 +9,25 @@ export function RegisterPage() {
   const register = useRegister();
   const navigate = useNavigate();
   const [params] = useSearchParams();
+  const search = params.toString() ? `?${params}` : '';
 
   return (
-    <>
-      <h1 className="font-display text-title">Take a seat</h1>
-      <p className="mb-6 text-ink-muted">Create an account to start your watchlist.</p>
+    <Window
+      eyebrow="Box office — new accounts"
+      heading="Open an account"
+      foot={
+        <>
+          <span>Already have one?</span>
+          <Link to={{ pathname: '/login', search }}>Sign in</Link>
+        </>
+      }
+    >
       <AuthForm
         mode="register"
         isPending={register.isPending}
         serverError={register.error ? errorMessage(register.error) : undefined}
-        onSubmit={(values) =>
-          register.mutate(values, { onSuccess: () => navigate(safeNextPath(params.get('next')), { replace: true }) })
-        }
+        onSubmit={(values) => register.mutate(values, { onSuccess: () => navigate(safeNextPath(params.get('next')), { replace: true }) })}
       />
-      <p className="mt-6 text-center text-sm text-ink-muted">
-        Already have an account?{' '}
-        <Link to={{ pathname: '/login', search: params.toString() && `?${params}` }} className="font-medium text-accent hover:underline">
-          Sign in
-        </Link>
-      </p>
-    </>
+    </Window>
   );
 }

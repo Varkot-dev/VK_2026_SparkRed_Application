@@ -1,5 +1,5 @@
 import { loginInput, registerInput, PASSWORD_MIN, USERNAME_MAX, USERNAME_MIN } from '@marquee/shared';
-import { useState, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 
@@ -16,7 +16,7 @@ type AuthFormProps = {
 
 const COPY: Record<Mode, { submit: string; pending: string }> = {
   login: { submit: 'Sign in', pending: 'Signing in…' },
-  register: { submit: 'Create account', pending: 'Creating…' },
+  register: { submit: 'Create account', pending: 'Printing…' },
 };
 
 export function AuthForm({ mode, onSubmit, isPending, serverError }: AuthFormProps) {
@@ -40,13 +40,13 @@ export function AuthForm({ mode, onSubmit, isPending, serverError }: AuthFormPro
     onSubmit(result.data);
   };
 
-  const update = (field: keyof Values) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const update = (field: keyof Values) => (e: ChangeEvent<HTMLInputElement>) => {
     setValues((v) => ({ ...v, [field]: e.target.value }));
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} noValidate className="grid gap-4">
       <Input
         label="Username"
         name="username"
@@ -57,7 +57,7 @@ export function AuthForm({ mode, onSubmit, isPending, serverError }: AuthFormPro
         value={values.username}
         onChange={update('username')}
         error={errors.username}
-        hint={mode === 'register' ? `${USERNAME_MIN}–${USERNAME_MAX} characters, letters, numbers, underscores` : undefined}
+        hint={mode === 'register' ? `${USERNAME_MIN}–${USERNAME_MAX} characters · letters, numbers, underscores` : undefined}
       />
       <Input
         label="Password"
@@ -70,11 +70,11 @@ export function AuthForm({ mode, onSubmit, isPending, serverError }: AuthFormPro
         hint={mode === 'register' ? `At least ${PASSWORD_MIN} characters` : undefined}
       />
       {serverError && (
-        <p role="alert" className="rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-ink">
+        <p role="alert" className="window__alert">
           {serverError}
         </p>
       )}
-      <Button type="submit" size="lg" isLoading={isPending} className="mt-2">
+      <Button type="submit" variant={mode === 'register' ? 'red' : 'blue'} block isLoading={isPending}>
         {isPending ? COPY[mode].pending : COPY[mode].submit}
       </Button>
     </form>

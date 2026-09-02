@@ -1,17 +1,17 @@
-import { listQuery, type ListQuery, type WatchStatus } from '@marquee/shared';
+import { listQuery, type ListQuery } from '@marquee/shared';
 import { AnimatePresence } from 'motion/react';
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { Button } from '../../components/ui/Button';
-import { EmptyState } from '../../components/ui/EmptyState';
-import { PosterCardSkeleton } from '../../components/ui/Skeleton';
+import { Notice } from '../../components/ui/Notice';
+import { StubSkeleton } from '../../components/ui/StubSkeleton';
 import { useToast } from '../../components/ui/toast-context';
 import { errorMessage } from '../../lib/api';
-import { WatchlistCard } from './WatchlistCard';
-import { WatchlistToolbar, type StatusFilter } from './WatchlistToolbar';
+import { Rail, type StatusFilter } from './Rail';
+import { TicketStub } from './TicketStub';
 import { DEFAULT_LIST_QUERY, useAllWatchlist, useRemoveItem, useUpdateItem, useWatchlist } from './queries';
 
-const SKELETON_COUNT = 10;
+const SKELETON_COUNT = 8;
 
 /** Filter/sort live in the URL so a view can be shared or restored on refresh. */
 function useListQueryFromUrl(): [ListQuery, (next: ListQuery) => void] {
@@ -42,7 +42,7 @@ export function WatchlistPage() {
   const counts = useMemo<Record<StatusFilter, number> | null>(() => {
     if (!all.data) return null;
     const base: Record<StatusFilter, number> = { all: all.data.length, want: 0, watching: 0, watched: 0 };
-    for (const item of all.data) base[item.status as WatchStatus] += 1;
+    for (const item of all.data) base[item.status] += 1;
     return base;
   }, [all.data]);
 
@@ -50,63 +50,70 @@ export function WatchlistPage() {
   const hasAnyItems = (all.data?.length ?? 0) > 0;
 
   return (
-    <section aria-labelledby="watchlist-heading" className="flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-accent">Now showing</p>
-        <h1 id="watchlist-heading" className="font-display text-hero leading-none">Your marquee</h1>
-        {counts && (
-          <p className="text-ink-muted">
-            {counts.all === 0 ? 'Nothing on the bill yet.' : `${counts.all} ${counts.all === 1 ? 'movie' : 'movies'} · ${counts.watched} watched`}
-          </p>
-        )}
-      </header>
+    <section aria-labelledby="roll-heading">
+      <div className="screen">
+        <h1 id="roll-heading" className="screen__h">
+          The roll
+        </h1>
+        <p className="screen__note">
+          {counts === null ? 'Printing…' : counts.all === 0 ? 'No stubs yet' : `${counts.all} ${counts.all === 1 ? 'stub' : 'stubs'} · ${counts.watched} torn`}
+        </p>
+      </div>
 
-      {hasAnyItems && <WatchlistToolbar query={query} counts={counts} onChange={setQuery} />}
+      {hasAnyItems && <Rail query={query} counts={counts} onChange={setQuery} />}
 
       {list.isPending ? (
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" aria-label="Loading your watchlist">
-          {Array.from({ length: SKELETON_COUNT }, (_, i) => <PosterCardSkeleton key={i} />)}
-        </div>
+        <ul className="stubs" aria-label="Printing your roll">
+          {Array.from({ length: SKELETON_COUNT }, (_, i) => (
+            <StubSkeleton key={i} />
+          ))}
+        </ul>
       ) : list.isError ? (
-        <EmptyState
-          title="Couldn't load your watchlist"
-          description={errorMessage(list.error)}
-          action={<Button variant="secondary" onClick={() => list.refetch()}>Try again</Button>}
-        />
+        <div className="pt-6">
+          <Notice roll="Printer jam" title="Couldn't print your roll" action={<Button variant="ghost" onClick={() => list.refetch()}>Try again</Button>}>
+            {errorMessage(list.error)}
+          </Notice>
+        </div>
       ) : !hasAnyItems ? (
-        <EmptyState
-          title="The marquee is dark"
-          description="Search for a movie and add it to light things up."
-          action={<Button onClick={() => undefined} className="p-0"><Link to="/search" className="flex h-full items-center px-5">Find a movie</Link></Button>}
-        />
+        <div className="pt-6">
+          <Notice
+            roll="Roll empty"
+            title="Nothing on the bill yet"
+            action={
+              <Link to="/search" className="btn btn--red">
+                Find a film
+              </Link>
+            }
+          >
+            Find a film and tear off your first stub. Every one you add gets a serial and a seat.
+          </Notice>
+        </div>
       ) : items.length === 0 ? (
-        <EmptyState
-          title="Nothing here yet"
-          description="No movies match this filter."
-          action={<Button variant="secondary" onClick={() => setQuery({ ...query, status: undefined })}>Show everything</Button>}
-        />
+        <div className="pt-6">
+          <Notice roll="Filter" title="No stubs match" action={<Button variant="ghost" onClick={() => setQuery({ ...query, status: undefined })}>Show everything</Button>}>
+            Nothing on the roll has this status yet.
+          </Notice>
+        </div>
       ) : (
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <ul className="stubs">
           <AnimatePresence mode="popLayout" initial={false}>
             {items.map((item, index) => (
-              <WatchlistCard
+              <TicketStub
                 key={item.id}
                 item={item}
                 index={index}
                 isRemoving={remove.isPending && remove.variables === item.id}
-                onUpdate={(patch) =>
-                  update.mutate({ id: item.id, patch }, { onError: (err) => toast.push(errorMessage(err), 'error') })
-                }
+                onUpdate={(patch) => update.mutate({ id: item.id, patch }, { onError: (err) => toast.push(errorMessage(err), 'error') })}
                 onRemove={() =>
                   remove.mutate(item.id, {
-                    onSuccess: () => toast.push(`Removed “${item.title}”`),
+                    onSuccess: () => toast.push(`Voided ${item.title}`),
                     onError: (err) => toast.push(errorMessage(err), 'error'),
                   })
                 }
               />
             ))}
           </AnimatePresence>
-        </div>
+        </ul>
       )}
     </section>
   );

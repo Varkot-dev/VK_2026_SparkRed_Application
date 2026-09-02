@@ -4,6 +4,7 @@ import { cn } from '../../lib/cn';
 import { ToastContext, type ToastTone } from './toast-context';
 
 type Toast = { id: number; message: string; tone: ToastTone };
+
 const TOAST_TTL_MS = 3_800;
 const MAX_VISIBLE = 3;
 
@@ -22,39 +23,27 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <ToastViewport toasts={toasts} />
+      <Receipts toasts={toasts} />
     </ToastContext.Provider>
   );
 }
 
-
-const TONE: Record<ToastTone, string> = {
-  info: 'border-line-strong',
-  success: 'border-success/60',
-  error: 'border-danger/60',
-};
-
-function ToastViewport({ toasts }: { toasts: Toast[] }) {
+/** Toasts print like receipts: mono, boxed, torn off the bottom edge. */
+function Receipts({ toasts }: { toasts: Toast[] }) {
   const reduceMotion = useReducedMotion();
   return (
-    <div
-      aria-live="polite"
-      className="pointer-events-none fixed inset-x-0 bottom-[max(1rem,env(safe-area-inset-bottom))] z-50 flex flex-col items-center gap-2 px-4 sm:items-end sm:pr-6"
-    >
+    <div aria-live="polite" className="receipts">
       <AnimatePresence initial={false}>
         {toasts.map((t) => (
           <motion.div
             key={t.id}
             layout
-            initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 18, clipPath: 'inset(100% 0 0 0)' }}
+            animate={{ opacity: 1, y: 0, clipPath: 'inset(0 0 0 0)' }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
+            transition={{ duration: 0.28, ease: [0.2, 0.7, 0.3, 1] }}
             role={t.tone === 'error' ? 'alert' : 'status'}
-            className={cn(
-              'pointer-events-auto max-w-sm rounded-lg border bg-surface-2/95 px-4 py-3 text-sm text-ink shadow-poster backdrop-blur',
-              TONE[t.tone],
-            )}
+            className={cn('receipt', t.tone === 'success' && 'receipt--success', t.tone === 'error' && 'receipt--error')}
           >
             {t.message}
           </motion.div>

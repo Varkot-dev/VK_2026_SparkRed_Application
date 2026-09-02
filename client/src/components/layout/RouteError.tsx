@@ -1,24 +1,25 @@
-import { isRouteErrorResponse, Link, useRouteError } from 'react-router';
+import { isRouteErrorResponse, useRouteError } from 'react-router';
 import { errorMessage } from '../../lib/api';
 import { Button } from '../ui/Button';
-import { EmptyState } from '../ui/EmptyState';
+import { Notice } from '../ui/Notice';
 
 export function RouteError() {
   const error = useRouteError();
   const is404 = isRouteErrorResponse(error) && error.status === 404;
 
   return (
-    <div className="flex min-h-dvh items-center justify-center px-4">
-      <EmptyState
-        title={is404 ? 'That reel is missing' : 'Something went wrong'}
-        description={is404 ? 'There is nothing at this address.' : errorMessage(error, 'An unexpected error occurred.')}
+    <div className="lobby">
+      <Notice
+        roll={is404 ? 'No such screen' : 'Projector fault'}
+        title={is404 ? 'Nothing showing here' : 'Something went wrong'}
         action={
-          <Button variant="secondary" onClick={() => (window.location.href = '/')}>
-            Back to Marquee
+          <Button variant="ghost" onClick={() => (window.location.href = '/')}>
+            Back to the box office
           </Button>
         }
-      />
-      <Link to="/" className="sr-only">Home</Link>
+      >
+        {is404 ? 'There is nothing at this address.' : errorMessage(error, 'An unexpected error occurred.')}
+      </Notice>
     </div>
   );
 }
