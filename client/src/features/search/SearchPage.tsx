@@ -74,7 +74,7 @@ export function SearchPage() {
           </Notice>
         </div>
       ) : search.isPending ? (
-        <p className="mono pt-6" style={{ color: 'var(--thermal)' }} aria-live="polite">
+        <p className="mono pt-6" style={{ color: 'var(--thermal-text)' }} aria-live="polite">
           Printing results…
         </p>
       ) : search.isError ? (

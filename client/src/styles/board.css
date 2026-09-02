@@ -222,7 +222,7 @@
   font-size: var(--t-data);
   letter-spacing: var(--track-data);
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
 }
 .dirbtn {
   font-family: var(--face-mono);
@@ -262,7 +262,7 @@
   font-size: var(--t-data);
   letter-spacing: var(--track-data);
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
 }
 
 .colophon {
@@ -273,7 +273,7 @@
   font-size: var(--t-data);
   letter-spacing: var(--track-data);
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
   display: flex;
   justify-content: space-between;
   gap: var(--s-3);

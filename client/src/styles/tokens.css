@@ -20,7 +20,8 @@
   --ink-faint: #5b605a;
   --stock: #e4e6e0;
   --card: #f8f8f5;
-  --thermal: #9da29b;
+  --thermal: #9da29b; /* decorative only: rules, dividers, unpunched holes */
+  --thermal-text: #5f645e; /* the same grey, dark enough to read (≥4.5:1 on stock and card) */
   --rule: #c9ccc5;
   --stub-tint: #dee2dc;
   --bulb: #f0d28a;

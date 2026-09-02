@@ -81,13 +81,13 @@
   font-size: var(--t-micro);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
 }
 .stub__serial b {
-  color: var(--ticket-red);
+  color: var(--ticket-red-deep);
   font-weight: 600;
 }
 
@@ -215,7 +215,7 @@
   font-size: var(--t-micro);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
@@ -235,7 +235,7 @@
   font-size: var(--t-micro);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
   justify-self: start;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -305,7 +305,7 @@
   font-size: var(--t-micro);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
   margin: 0;
 }
 .rating__score {
@@ -315,7 +315,7 @@
   color: var(--ticket-red);
 }
 .rating__score--none {
-  color: var(--thermal);
+  color: var(--thermal-text);
   font-family: var(--face-mono);
   font-size: var(--t-micro);
 }
@@ -469,7 +469,7 @@
   min-height: 3rem;
 }
 .searchbar input::placeholder {
-  color: var(--thermal);
+  color: var(--thermal-text);
 }
 .searchbar input:focus {
   outline: none;
@@ -486,7 +486,7 @@
   font-size: var(--t-micro);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
   white-space: nowrap;
 }
 
@@ -585,7 +585,7 @@
   font-size: var(--t-data);
   letter-spacing: var(--track-data);
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
   margin-left: auto;
   font-variant-numeric: tabular-nums;
 }
@@ -704,7 +704,7 @@
   font-size: var(--t-micro);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
   text-align: center;
 }
 

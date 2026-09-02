@@ -200,7 +200,7 @@ button {
   font-size: var(--t-micro);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
 }
 .field__err {
   font-family: var(--face-mono);
@@ -266,7 +266,7 @@ button {
   font-size: var(--t-micro);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--thermal);
+  color: var(--thermal-text);
 }
 .notice__h {
   font-family: var(--face-display);
