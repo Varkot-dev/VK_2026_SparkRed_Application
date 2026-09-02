@@ -15,7 +15,8 @@ type PunchStripProps = {
 export function PunchStrip({ label, value, onChange, disabled }: PunchStripProps) {
   return (
     <>
-      <div className="punchstrip hidden sm:flex" role="group" aria-label={label}>
+      <div className="hidden sm:block">
+      <div className="punchstrip" role="group" aria-label={label}>
         {WATCH_STATUSES.map((s) => (
           <button
             key={s}
@@ -28,6 +29,7 @@ export function PunchStrip({ label, value, onChange, disabled }: PunchStripProps
             {WATCH_STATUS_SHORT_LABEL[s]}
           </button>
         ))}
+      </div>
       </div>
       <select
         className="select sm:hidden"

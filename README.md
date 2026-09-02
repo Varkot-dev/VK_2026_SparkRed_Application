@@ -1,6 +1,6 @@
 # Marquee
 
-A personal movie watchlist. Search the TMDB catalogue, add films to your list, track them as *want to watch → watching → watched*, rate what you've seen out of 10, and sort or filter the whole thing.
+A personal movie watchlist styled as a box office. Search the TMDB catalogue, tear off a ticket stub for every film you mean to see, stamp it *want → watching → watched*, punch your rating out of 10, and sort or filter the roll.
 
 **Live:** https://vk-2026-spark-red-application.vercel.app
 
@@ -19,10 +19,14 @@ Built for the Penn Spark Red developer technical assessment.
 
 | Area | Included |
 |---|---|
-| **Frontend** | Components (a small UI kit: `Button`, `Input`, `Select`, `SegmentedControl`, `RatingPicker`, `PosterImage`, `Skeleton`, `EmptyState`, `Toast`), animations (page transitions, layout animations when the list re-sorts, poster hover, staggered card entrance — all respecting `prefers-reduced-motion`), mobile responsiveness (2-column poster grid at 320px up to 5 columns at 1440px; native selects replace fiddly controls on phones) |
+| **Frontend** | Components (a small UI kit: `Button`, `Input`, `Tabs`, `PunchStrip`, `Holes`, `Stamp`, `PosterImage`, `StubSkeleton`, `Notice`, `Toast`), animations (stubs print in with a stepped thermal-printer reveal, a new status slams down as a rubber stamp, removed stubs tear off at the perforation, the list re-sorts with layout animation — all gated on `prefers-reduced-motion`), mobile responsiveness (2-column stubs at 320px up to 4 columns at 960px+; native selects replace the punch strip and holes on phones) |
 | **Backend** | User registration / login / logout with server-side sessions, API calls to TMDB (proxied through the server so the key never reaches the browser), Postgres integration via Drizzle ORM, classes and objects (`TmdbClient`, `TtlCache`, `AuthService`, `WatchlistService`, `UserRepository`, `WatchlistRepository`, an `AppError` hierarchy) |
 | **Full-stack** | React (Vite) frontend talking to an Express API, with the request/response contracts defined once in a shared package and validated on both sides with zod |
 | **Misc** | Deployed on Vercel (frontend + API on one origin) with a Neon Postgres database; unit tests on the service layer and helpers; loading, empty, and error states on every screen |
+
+## The design
+
+Every film on your list is a roll ticket. The tear-off column carries data that is derived, not decorated: the serial is the TMDB id, the row/seat is dealt from the list row id so no two stubs share a seat, and the print date is when you added it. Status is a rubber stamp; the rating is ten punch positions grouped 5+5 like a real punch card; removing a film "voids" it behind a red-bordered confirmation. Films left unwatched for 90 days get an "on the shelf" band. The palette is named from ticket stock (ticket blue, stamp red, ink, bone card stock, thermal grey) and the type is Archivo Black for display, IBM Plex Mono for stub data, and Work Sans for body. Perforations and notches are done with CSS masks and gradients so each stub stays one DOM node that animates on transform and opacity only.
 
 ## Tech stack
 
